@@ -18,7 +18,7 @@ Available as a **macOS desktop app** with a built-in setup wizard, or as a **web
 
 ## Demo
 
-<video src="assets/demo.mp4" width="100%" autoplay loop muted playsinline></video>
+https://raw.githubusercontent.com/rrohaill/PulseAI/main/assets/demo.mp4
 
 ## Features
 

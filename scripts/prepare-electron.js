@@ -61,7 +61,29 @@ if (fs.existsSync(publicSrc)) {
   log("No public/ directory found, skipping");
 }
 
-// Step 4: Rebuild better-sqlite3 for Electron
+// Step 4: Resolve symlinks in standalone node_modules
+// Next.js standalone creates symlinks that electron-builder can't follow
+log("Resolving symlinks in standalone output...");
+const nodeModDirs = [
+  path.join(outputDir, "node_modules"),
+  path.join(outputDir, ".next", "node_modules"),
+];
+for (const dir of nodeModDirs) {
+  if (!fs.existsSync(dir)) continue;
+  const entries = fs.readdirSync(dir);
+  for (const entry of entries) {
+    const entryPath = path.join(dir, entry);
+    const stat = fs.lstatSync(entryPath);
+    if (stat.isSymbolicLink()) {
+      const realPath = fs.realpathSync(entryPath);
+      log(`  Resolving symlink: ${entry} → ${realPath}`);
+      fs.rmSync(entryPath, { recursive: true, force: true });
+      execSync(`cp -R "${realPath}" "${entryPath}"`, { stdio: "pipe" });
+    }
+  }
+}
+
+// Step 5: Rebuild better-sqlite3 for Electron
 log("Rebuilding better-sqlite3 for Electron...");
 try {
   execSync("npx @electron/rebuild -f -w better-sqlite3", {
