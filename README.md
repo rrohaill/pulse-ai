@@ -4,6 +4,18 @@ An AI-powered news aggregation dashboard that curates articles from RSS feeds, R
 
 Available as a **macOS desktop app** with a built-in setup wizard, or as a **web app** you can self-host.
 
+## Download
+
+> **macOS Desktop App** - Download, install, and run. The setup wizard handles everything.
+
+| Platform | Architecture | Download |
+|----------|-------------|----------|
+| macOS | Apple Silicon (M1/M2/M3/M4) | [Pulse AI-0.1.0-arm64.dmg](https://github.com/rrohaill/PulseAI/releases/latest/download/Pulse.AI-0.1.0-arm64.dmg) |
+
+1. Download the `.dmg` file
+2. Open it and drag **Pulse AI** to your Applications folder
+3. Launch Pulse AI - the setup wizard will install Ollama and download the AI model automatically
+
 ## Demo
 
 <video src="assets/demo.mp4" width="100%" autoplay loop muted playsinline></video>
