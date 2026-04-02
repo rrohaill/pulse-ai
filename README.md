@@ -10,7 +10,9 @@ Available as a **macOS desktop app** with a built-in setup wizard, or as a **web
 
 | Platform | Architecture | Download |
 |----------|-------------|----------|
-| macOS | Apple Silicon (M1/M2/M3/M4) | [Pulse AI-0.1.0-arm64.dmg](https://github.com/rrohaill/PulseAI/releases/latest/download/Pulse.AI-0.1.0-arm64.dmg) |
+| macOS | Apple Silicon (M1/M2/M3/M4) | [Pulse AI-0.1.0-arm64.dmg](https://github.com/rrohaill/pulse-ai/releases/latest/download/Pulse.AI-0.1.0-arm64.dmg) |
+
+> If the direct link doesn't work, download from the [Releases page](https://github.com/rrohaill/pulse-ai/releases/latest).
 
 1. Download the `.dmg` file
 2. Open it and drag **Pulse AI** to your Applications folder
@@ -18,7 +20,7 @@ Available as a **macOS desktop app** with a built-in setup wizard, or as a **web
 
 ## Demo
 
-https://raw.githubusercontent.com/rrohaill/PulseAI/main/assets/demo.mp4
+https://raw.githubusercontent.com/rrohaill/pulse-ai/main/assets/demo.mp4
 
 ## Features
 
