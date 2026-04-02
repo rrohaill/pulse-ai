@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse AI — Setup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+      background: #0a0a1a;
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-app-region: drag;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .titlebar {
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 48px 40px;
+      -webkit-app-region: no-drag;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 32px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .steps {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #1e293b;
+      transition: all 0.3s;
+    }
+
+    .step-dot.active {
+      background: #6366f1;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+    }
+
+    .step-dot.done {
+      background: #22c55e;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .status-card {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .status-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .status-text {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    .status-detail {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #1e293b;
+      border-radius: 2px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-app-region: no-drag;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      color: white;
+      box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #64748b;
+      font-size: 12px;
+      padding: 8px 16px;
+    }
+
+    .btn-ghost:hover { color: #94a3b8; }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .check { color: #22c55e; }
+    .spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="titlebar"></div>
+  <div class="container">
+    <div class="logo">⚡</div>
+    <h1 id="title">Welcome to Pulse AI</h1>
+    <p class="subtitle" id="subtitle">
+      Your AI-powered news dashboard needs Ollama for local AI.<br>
+      Let's get everything set up.
+    </p>
+
+    <div class="steps">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+
+    <!-- Step 0: Welcome -->
+    <div class="content fade-in" id="step-0">
+      <div class="status-card">
+        <div class="status-icon">🤖</div>
+        <div class="status-text">Ollama runs AI models locally on your Mac</div>
+        <div class="status-detail">No API keys needed — free and private</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="startSetup()">Set Up Ollama</button>
+        <button class="btn btn-ghost" onclick="skipSetup()">Skip for now</button>
+      </div>
+    </div>
+
+    <!-- Step 1: Install Ollama -->
+    <div class="content fade-in hidden" id="step-1">
+      <div class="status-card">
+        <div class="status-icon" id="install-icon">⏳</div>
+        <div class="status-text" id="install-status">Checking for Ollama...</div>
+        <div class="status-detail" id="install-detail"></div>
+        <div class="progress-bar" id="install-progress-bar">
+          <div class="progress-fill" id="install-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Pull Model -->
+    <div class="content fade-in hidden" id="step-2">
+      <div class="status-card">
+        <div class="status-icon" id="pull-icon">⏳</div>
+        <div class="status-text" id="pull-status">Downloading AI model...</div>
+        <div class="status-detail" id="pull-detail">llama3.1 (~4.7 GB)</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="pull-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Done -->
+    <div class="content fade-in hidden" id="step-3">
+      <div class="status-card">
+        <div class="status-icon">🎉</div>
+        <div class="status-text">All set! Pulse AI is ready to go.</div>
+        <div class="status-detail">Ollama is running with llama3.1</div>
+      </div>
+      <button class="btn btn-primary" onclick="launchApp()">Launch Pulse AI</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+
+    function showStep(step) {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(`step-${i}`).classList.toggle("hidden", i !== step);
+        const dot = document.getElementById(`dot-${i}`);
+        dot.classList.toggle("active", i === step);
+        dot.classList.toggle("done", i < step);
+      }
+      currentStep = step;
+    }
+
+    // Listen for progress updates from main process
+    window.electronAPI.onProgress((data) => {
+      if (data.stage === "download" || data.stage === "install" || data.stage === "service") {
+        document.getElementById("install-status").textContent = data.status;
+        document.getElementById("install-progress").style.width = data.percent + "%";
+      } else if (data.stage === "pull") {
+        document.getElementById("pull-status").textContent = data.status;
+        document.getElementById("pull-progress").style.width = data.percent + "%";
+      }
+    });
+
+    async function startSetup() {
+      showStep(1);
+
+      // Check if Ollama is already installed
+      const check = await window.electronAPI.checkOllama();
+
+      if (check.binaryExists && check.serviceRunning) {
+        // Already fully set up, go to model pull
+        document.getElementById("install-icon").textContent = "✅";
+        document.getElementById("install-status").textContent = "Ollama is already installed!";
+        document.getElementById("install-progress").style.width = "100%";
+        await sleep(800);
+        await pullModel();
+        return;
+      }
+
+      if (check.appExists || check.binaryExists) {
+        // Installed but service not running
+        document.getElementById("install-icon").textContent = "🔄";
+        document.getElementById("install-status").textContent = "Ollama found — starting service...";
+        document.getElementById("install-progress").style.width = "50%";
+
+        const serviceResult = await window.electronAPI.startOllamaService();
+        if (serviceResult.success) {
+          document.getElementById("install-icon").textContent = "✅";
+          document.getElementById("install-status").textContent = "Ollama service started!";
+          document.getElementById("install-progress").style.width = "100%";
+          await sleep(800);
+          await pullModel();
+          return;
+        }
+      }
+
+      // Need to install from scratch
+      document.getElementById("install-status").textContent = "Downloading Ollama...";
+      const installResult = await window.electronAPI.installOllama();
+
+      if (!installResult.success) {
+        document.getElementById("install-icon").textContent = "❌";
+        document.getElementById("install-status").textContent = "Installation failed";
+        document.getElementById("install-detail").textContent =
+          installResult.error || "Please install Ollama manually from ollama.com";
+        return;
+      }
+
+      // Start the service
+      document.getElementById("install-status").textContent = "Starting Ollama...";
+      const serviceResult = await window.electronAPI.startOllamaService();
+
+      if (serviceResult.success) {
+        document.getElementById("install-icon").textContent = "✅";
+        document.getElementById("install-status").textContent = "Ollama installed and running!";
+        document.getElementById("install-progress").style.width = "100%";
+        await sleep(800);
+        await pullModel();
+      } else {
+        document.getElementById("install-icon").textContent = "⚠️";
+        document.getElementById("install-status").textContent =
+          "Installed but couldn't start. Please open Ollama.app manually.";
+      }
+    }
+
+    async function pullModel() {
+      showStep(2);
+
+      const result = await window.electronAPI.pullModel("llama3.1");
+
+      if (result.success) {
+        document.getElementById("pull-icon").textContent = "✅";
+        document.getElementById("pull-status").textContent = "Model ready!";
+        document.getElementById("pull-progress").style.width = "100%";
+        await sleep(800);
+        showStep(3);
+      } else {
+        document.getElementById("pull-icon").textContent = "⚠️";
+        document.getElementById("pull-status").textContent = "Model download issue";
+        document.getElementById("pull-detail").textContent =
+          result.error || "You can pull it manually: ollama pull llama3.1";
+        // Still allow launching
+        await sleep(1500);
+        showStep(3);
+      }
+    }
+
+    async function launchApp() {
+      await window.electronAPI.completeSetup();
+    }
+
+    async function skipSetup() {
+      await window.electronAPI.skipSetup();
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+  </script>
+</body>
+</html>

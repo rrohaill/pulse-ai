@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pulse AI
+
+An AI-powered news aggregation dashboard that curates articles from RSS feeds, Reddit, Twitter/X, and GitHub. Uses a local AI model (Ollama + Llama 3.1) to score, filter, and summarize hundreds of articles into a personalized feed.
+
+Available as a **macOS desktop app** with a built-in setup wizard, or as a **web app** you can self-host.
+
+## Demo
+
+<video src="assets/demo.mp4" width="100%" autoplay loop muted playsinline></video>
+
+## Features
+
+- **Multi-source ingestion** - RSS feeds, Reddit, Twitter/X profiles, and GitHub trending
+- **Local AI pipeline** - Ollama + Llama 3.1 for scoring, summarization, and tagging (no API keys needed)
+- **Dynamic categories** - Auto-generated topic filters (AI & Tech, Politics, etc.) based on your sources
+- **Bookmarks** - Save articles to read later with a dedicated Saved page
+- **Trend analysis** - Weekly AI-generated trend reports from top articles
+- **Desktop app** - Native macOS app via Electron with a first-run setup wizard
+- **Dark theme** - Clean, modern UI inspired by Linear and Vercel
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Database | SQLite + Drizzle ORM |
+| AI | Ollama (Llama 3.1) or OpenAI |
+| Desktop | Electron |
+| Styling | Tailwind CSS 4 |
+| Animations | Framer Motion |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- [Ollama](https://ollama.com) (optional - the desktop app installs it for you)
+
+### Web App (Development)
 
 ```bash
+git clone https://github.com/your-username/pulse-ai.git
+cd pulse-ai
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Desktop App (macOS)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run electron:dev
+```
 
-## Learn More
+On first launch, the setup wizard will:
 
-To learn more about Next.js, take a look at the following resources:
+1. Check if Ollama is installed
+2. Download and install Ollama if missing
+3. Pull the Llama 3.1 model (~4.7 GB)
+4. Launch the dashboard
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Build Desktop App (.dmg)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run electron:build
+```
 
-## Deploy on Vercel
+The `.dmg` will be in `dist-electron/`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copy `.env.example` to `.env.local` and configure:
+
+```env
+# AI Provider: "ollama" (default, free) or "openai"
+AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.1
+
+# OpenAI (alternative)
+# AI_PROVIDER=openai
+# OPENAI_API_KEY=sk-...
+
+# Scoring
+SCORE_THRESHOLD=60
+
+# Ingestion
+INGEST_INTERVAL_MINUTES=60
+```
+
+## Project Structure
+
+```
+src/
+  app/            # Next.js pages and API routes
+  components/     # React components (articles, filters, layout)
+  lib/
+    ai/           # AI provider, scoring, enrichment, trends
+    db/           # SQLite schema and connection
+    ingestion/    # RSS, Reddit, Twitter, GitHub fetchers
+electron/
+  main.js         # Electron main process
+  setup.js        # Ollama installation logic
+  setup.html      # First-run setup wizard
+  preload.js      # IPC bridge
+```
+
+## License
+
+MIT

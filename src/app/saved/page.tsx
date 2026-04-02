@@ -1,11 +1,11 @@
-import { DashboardClient } from "./dashboard-client";
 import { db } from "@/lib/db";
-import { articles, sources, ingestionRuns } from "@/lib/db/schema";
-import { desc, sql, eq } from "drizzle-orm";
+import { articles, sources } from "@/lib/db/schema";
+import { desc, eq, and } from "drizzle-orm";
+import { SavedClient } from "./saved-client";
 
 export const dynamic = "force-dynamic";
 
-async function getArticles() {
+async function getSavedArticles() {
   const rows = await db
     .select({
       id: articles.id,
@@ -30,8 +30,8 @@ async function getArticles() {
     })
     .from(articles)
     .innerJoin(sources, eq(articles.sourceId, sources.id))
-    .orderBy(desc(articles.publishedAt))
-    .limit(20);
+    .where(eq(articles.bookmarked, 1))
+    .orderBy(desc(articles.publishedAt));
 
   return rows as unknown as Array<{
     id: string;
@@ -56,48 +56,7 @@ async function getArticles() {
   }>;
 }
 
-async function getSources() {
-  return db.select({ id: sources.id, name: sources.name }).from(sources);
-}
-
-async function getStats() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const totalArticles = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(articles);
-
-  const todayArticles = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(articles)
-    .where(sql`${articles.fetchedAt} >= ${today.toISOString()}`);
-
-  const lastRun = await db
-    .select()
-    .from(ingestionRuns)
-    .orderBy(desc(ingestionRuns.startedAt))
-    .limit(1);
-
-  return {
-    total: totalArticles[0]?.count || 0,
-    today: todayArticles[0]?.count || 0,
-    lastRun: lastRun[0] || null,
-  };
-}
-
-export default async function DashboardPage() {
-  const [articleList, sourceList, stats] = await Promise.all([
-    getArticles(),
-    getSources(),
-    getStats(),
-  ]);
-
-  return (
-    <DashboardClient
-      initialArticles={articleList}
-      sources={sourceList}
-      stats={stats}
-    />
-  );
+export default async function SavedPage() {
+  const savedArticles = await getSavedArticles();
+  return <SavedClient articles={savedArticles} />;
 }

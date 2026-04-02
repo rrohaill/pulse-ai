@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# electron
+/standalone-app/
+/dist-electron/
+
+# database
+*.db
+*.db-shm
+*.db-wal
+
+# env overrides
+.env.local
+
+# misc
+.claude/
